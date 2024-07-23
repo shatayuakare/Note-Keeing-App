@@ -6,6 +6,20 @@ const Header = () => {
     const [authUser, setAuthUser] = useAuth();
     setAuthUser(authUser)
 
+    const logOut = () => {
+        try {
+            setAuthUser({
+                ...authUser,
+                User: null
+            })
+            localStorage.removeItem("user")
+            toast.success("User Logout");
+            window.location.reload();
+        } catch (error) {
+            toast.error(error.response.data.message)
+        }
+    }
+
     return (
         <header className="navbar bg-gray-100 text-black shadow-purple-300 shadow-xl md:px-24">
             <div className="navbar-start">
@@ -25,14 +39,13 @@ const Header = () => {
             <div className="navbar-end">
                 {
                     !authUser ?
-
                         <Link to={'/login'} className="btn btn-ghost bg-purple-700  hover:bg-purple-800 text-white font-bold btn-md">
                             Login
                         </Link>
                         :
-                        <Link to={'/login'} className="btn btn-ghost bg-purple-700  hover:bg-purple-800 text-white font-bold btn-md">
+                        <button onClick={logOut} className="btn btn-ghost bg-purple-700  hover:bg-purple-800 text-white font-bold btn-md">
                             Logout
-                        </Link>
+                        </button>
                 }
             </div>
         </header>

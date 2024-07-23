@@ -33,7 +33,7 @@ const Signup = () => {
             setError("Please enter valid password")
             return;
         }
-        setError("")
+
 
 
         const userInfo = {
@@ -47,16 +47,17 @@ const Signup = () => {
             // console.log(res.data.message)
             toast.success("Signup Successfully");
             // console.log(res)
-            console.log(res)
-            console.log(res.data)
             localStorage.setItem("user", JSON.stringify(res.data.user));
             // window.location.reload();
         }).catch((err) => {
-
             console.log("erro: ", err)
-            toast.error(err.response.message)
+            toast.error(err.response.data.message)
         })
 
+        setError("")
+        setTimeout(() => {
+            window.location.reload()
+        }, 2000);
     }
 
     const passwordShowHandler = () => {

@@ -11,14 +11,25 @@ const Form = () => {
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const email = authUser.email;
+
+    const [list, setList] = useState([]);
     const [error, setError] = useState(null);
+
+    let email = null;
+    let formData = {
+        title, content
+    }
+
+    if (authUser) {
+        email = authUser.email;
+        formData = {
+            title, content, email
+        }
+    }
 
     // const editNote = async () => { }
     // const addNewNote = async () => { }
-    const formData = {
-        title, content, email
-    }
+
     // console.log(email);
     const addNoteHandler = async (event) => {
         event.preventDefault();
@@ -31,15 +42,19 @@ const Form = () => {
             setError("Please enter message");
             return;
         }
-
-        await axios.post("https://note-keeing-app.onrender.com/notes/add", formData).then((res) => {
-            console.log("response ", res)
-            // console.log (res.data.message)
+        if (authUser) {
+            await axios.post("https://note-keeing-app.onrender.com/notes/add", formData).then((res) => {
+                console.log("response ", res)
+                // console.log (res.data.message)
+                toast.success("Note add Successfully")
+            }).catch((err) => {
+                setError(err.response.message)
+                if (err.response) returntoast.error(err.response.message)
+            })
+        } else {
+            setList([...list, formData])
             toast.success("Note add Successfully")
-        }).catch((err) => {
-            setError(err.response.message)
-            if (err.response) returntoast.error(err.response.message)
-        })
+        }
         setError(null);
 
         setTimeout(() => {
@@ -54,7 +69,7 @@ const Form = () => {
                 <form action="" className='gap-6 grid' onSubmit={addNoteHandler}>
                     <h4 className='sm:text-2xl md:text-3xl mt-2 font-bold text-white text-center'>
                         Add Notes with Agenda
-                        <button className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4">
+                        <button type='button' className="btn btn-sm btn-circle btn-ghost absolute right-4 top-4">
                             ✕
                         </button>
                     </h4>
@@ -74,7 +89,7 @@ const Form = () => {
                         error && <p className='text-red-300'>{error}</p>
                     }
                     <hr />
-                    <button className='btn btn-ghost bg-purple-700 w-2/5 hover:bg-purple-800 text-white font-bold btn-md  mx-auto block'>
+                    <button type='submit' className='btn btn-ghost bg-purple-700 w-2/5 hover:bg-purple-800 text-white font-bold btn-md  mx-auto block'>
                         Add Note
                     </button>
                 </form>

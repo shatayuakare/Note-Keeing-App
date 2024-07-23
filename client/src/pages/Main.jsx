@@ -6,28 +6,37 @@ import { useAuth } from '../context/AuthProvider';
 const Main = () => {
     const [notes, setNotes] = useState([]);
     const [authUser, setAuthUser] = useAuth();
-
-
     setAuthUser(authUser)
-    useEffect(() => {
-        fetch('http://localhost:4001/notes')
-            .then((res) => {
-                return res.json();
-            })
-            .then((data) => {
-                console.log(data);
-                setNotes(data);
-            });
 
-        const userId = '669fa7a84553b1fc55110d6b'; // Replace with the actual ID
+
+    useEffect(() => {
+        if (authUser) {
+            fetch('http://localhost:4001/notes')
+                .then((res) => {
+                    return res.json();
+                })
+                .then((data) => {
+                    console.log(data);
+                    setNotes(data);
+                });
+        } else {
+            const data = {
+                _id: Date.now(),
+                title: "Hello, Guys",
+                content: "Hope you follow your agenda properly. Guys note one thing, You may forgot your agenda because your not logged In. Enjoy!",
+                date: Date.now()
+            }
+            setNotes([...notes, data])
+        }
+        // const userId = '669fa7a84553b1fc55110d6b'; // Replace with the actual ID
         // axios.get(`http://localhost:3000/api/users/${userId}`)
 
-        fetch(`http://localhost:4001/notes${userId}`).then(response => {
-            console.log(response);
-        })
-            .catch(error => {
-                console.error(error);
-            });
+        // fetch(`http://localhost:4001/notes${userId}`).then(response => {
+        //     console.log(response);
+        // })
+        //     .catch(error => {
+        //         console.error(error);
+        //     });
     }, []);
 
 

@@ -32,18 +32,20 @@ const Login = () => {
         }
         // console.log(userInfo)
 
-        await axios.post("https://note-keeing-app.onrender.com//auth/login", userInfo).then((res) => {
+        await axios.post("https://note-keeing-app.onrender.com/auth/login", userInfo).then((res) => {
             // console.log (res.data.message)
             toast.success("Login Successfullly")
 
             localStorage.setItem("user", JSON.stringify(res.data.user));
         }).catch((err) => {
             setError(err.response.data.message)
-            if (err.response) toast.error(err.response.data.message)
+            if (err.response) return toast.error(err.response.data.message)
         })
 
         setError("")
-
+        setTimeout(() => {
+            window.location.reload()
+        }, 2000);
     }
 
     const passwordShowHandler = () => {
