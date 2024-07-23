@@ -1,7 +1,7 @@
 import "./App.css"
 import { Toaster } from "react-hot-toast"
-// import { useAuth } from "./context/AuthProvider"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { useAuth } from "./context/AuthProvider"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 import Main from "./pages/Main"
 import Login from "./pages/Login"
 import Signup from "./pages/Signup"
@@ -10,16 +10,16 @@ import Footer from "./pages/Footer"
 
 const App = () => {
 
-  // const [authUser, setAuthUser] = useAuth()
-  // setAuthUser(authUser)
+  const [authUser, setAuthUser] = useAuth()
+  setAuthUser(authUser)
 
   return (
     <BrowserRouter>
       <Header />
       <Routes>
         <Route path={"/"} element={<Main />} />
-        <Route path={"/login"} element={<Login />} />
-        <Route path={"/signup"} element={<Signup />} />
+        <Route path={"/login"} element={!authUser ? <Login /> : <Navigate path={"/"} />} />
+        <Route path={"/signup"} element={!authUser ? <Signup /> : <Navigate path={"/"} />} />
       </Routes>
       <Footer />
       <Toaster />

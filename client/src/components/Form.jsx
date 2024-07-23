@@ -32,15 +32,13 @@ const Form = () => {
             return;
         }
 
-        await axios.post("http://localhost:4001/notes/add", formData).then((res) => {
+        await axios.post("https://note-keeing-app.onrender.com/notes/add", formData).then((res) => {
             console.log("response ", res)
             // console.log (res.data.message)
             toast.success("Note add Successfully")
         }).catch((err) => {
-            console.log(err)
-            console.log(res)
-            // setError(err.response.message)
-            // if (err.response) returntoast.error(err.response.message)
+            setError(err.response.message)
+            if (err.response) returntoast.error(err.response.message)
         })
         setError(null);
 

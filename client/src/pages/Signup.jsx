@@ -43,7 +43,7 @@ const Signup = () => {
         }
 
         // console.log(userInfo)
-        await axios.post("http://localhost:4001/auth/signup", userInfo).then((res) => {
+        await axios.post("https://note-keeing-app.onrender.com/auth/signup", userInfo).then((res) => {
             // console.log(res.data.message)
             toast.success("Signup Successfully");
             // console.log(res)

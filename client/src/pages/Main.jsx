@@ -6,6 +6,8 @@ import { useAuth } from '../context/AuthProvider';
 const Main = () => {
     const [notes, setNotes] = useState([]);
     const [authUser, setAuthUser] = useAuth();
+
+
     setAuthUser(authUser)
     useEffect(() => {
         fetch('http://localhost:4001/notes')
