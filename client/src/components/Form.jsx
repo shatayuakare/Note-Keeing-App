@@ -8,7 +8,6 @@ const Form = () => {
     const [authUser, setAuthUser] = useAuth();
     setAuthUser(authUser)
 
-
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
@@ -27,10 +26,6 @@ const Form = () => {
         }
     }
 
-    // const editNote = async () => { }
-    // const addNewNote = async () => { }
-
-    // console.log(email);
     const addNoteHandler = async (event) => {
         event.preventDefault();
 
@@ -59,7 +54,7 @@ const Form = () => {
 
         setTimeout(() => {
             window.location.reload()
-        }, 2000);
+        }, 3000);
     }
 
 

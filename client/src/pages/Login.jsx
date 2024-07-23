@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { validateEmail } from "../helper"
 
 const Login = () => {
-
+    const [loading, setLoading] = useState(false)
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
@@ -16,6 +16,7 @@ const Login = () => {
 
     const halderlogin = async (event) => {
         event.preventDefault();
+        setLoading(true)
         if (!validateEmail(email)) {
             setError("PLease enter a valid email address.");
             return;
@@ -34,10 +35,12 @@ const Login = () => {
 
         await axios.post("https://note-keeing-app.onrender.com/auth/login", userInfo).then((res) => {
             // console.log (res.data.message)
+            setLoading(false)
             toast.success("Login Successfullly")
 
             localStorage.setItem("user", JSON.stringify(res.data.user));
         }).catch((err) => {
+            setLoading(false)
             setError(err.response.data.message)
             if (err.response) return toast.error(err.response.data.message)
         })
@@ -99,6 +102,9 @@ const Login = () => {
                 <div>
                     <button type='submit'
                         className='btn btn-ghost bg-purple-700  w-2/5 hover:bg-purple-800 text-white font-bold btn-md  mx-auto block'>
+                        {
+                            loading && <span className="loading loading-spinner"></span>
+                        }
                         Login
                     </button>
 

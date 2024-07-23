@@ -11,7 +11,7 @@ const Main = () => {
 
     useEffect(() => {
         if (authUser) {
-            fetch('http://localhost:4001/notes')
+            fetch('https://note-keeing-app.onrender.com/notes')
                 .then((res) => {
                     return res.json();
                 })
@@ -28,15 +28,6 @@ const Main = () => {
             }
             setNotes([...notes, data])
         }
-        // const userId = '669fa7a84553b1fc55110d6b'; // Replace with the actual ID
-        // axios.get(`http://localhost:3000/api/users/${userId}`)
-
-        // fetch(`http://localhost:4001/notes${userId}`).then(response => {
-        //     console.log(response);
-        // })
-        //     .catch(error => {
-        //         console.error(error);
-        //     });
     }, []);
 
 

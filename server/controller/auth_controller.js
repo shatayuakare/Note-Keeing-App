@@ -17,8 +17,7 @@ export const signup = async (req, res) => {
         res.status(201).json({
             message: "User Created Successfully",
             user: {
-                name: user.name,
-                email: user.email
+                name, email
             }
         })
     } catch (error) {
