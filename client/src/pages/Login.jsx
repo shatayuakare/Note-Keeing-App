@@ -33,12 +33,13 @@ const Login = () => {
         }
         // console.log(userInfo)
 
-        await axios.post("https://note-keeing-app.onrender.com/auth/login", userInfo).then((res) => {
+        await axios.post("http://localhost:4001/auth/login", userInfo).then((res) => {
             // console.log (res.data.message)
             setLoading(false)
             toast.success("Login Successfullly")
-
-            localStorage.setItem("user", JSON.stringify(res.data.user));
+            localStorage.setItem("token", res.data.token)
+            console.log(res.data.token)
+            // localStorage.setItem("user", JSON.stringify(res.data.user));
         }).catch((err) => {
             setLoading(false)
             setError(err.response.data.message)

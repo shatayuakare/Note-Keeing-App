@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Form from '../components/Form'
 import { useAuth } from '../context/AuthProvider';
+import axios from 'axios';
+import EditForm from '../components/EditForm';
 
 
 const Main = () => {
@@ -9,27 +11,31 @@ const Main = () => {
     setAuthUser(authUser)
 
 
-    useEffect(() => {
-        if (authUser) {
-            fetch('https://note-keeing-app.onrender.com/notes')
-                .then((res) => {
-                    return res.json();
-                })
-                .then((data) => {
-                    console.log(data);
-                    setNotes(data);
-                });
-        } else {
-            const data = {
-                _id: Date.now(),
-                title: "Hello, Guys",
-                content: "Hope you follow your agenda properly. Guys note one thing, You may forgot your agenda because your not logged In. Enjoy!",
-                date: Date.now()
-            }
-            setNotes([...notes, data])
-        }
-    }, []);
+    const [editData, setEditData] = useState(null);
+    const getNotes = async () => {
+        const note = await axios.get("http://localhost:4001/notes/");
+        setNotes(note.data)
+    }
 
+    const deleteNote = async (id) => {
+        await axios.delete(`http://localhost:4001/notes/${id}`)
+    }
+
+    const starMark = async (id) => {
+        await axios.put(`http://localhost:4001/notes/star/${id}`)
+    }
+
+    const editNote = async (elem) => {
+        document.getElementById('edit-form').showModal()
+        setEditData({
+            id: elem.id,
+            title: elem.title,
+            content: elem.title
+        })
+    }
+    useEffect(() => {
+        getNotes()
+    }, [{ starMark, deleteNote }])
 
     return (
         <section className='flex items-center justify-center'>
@@ -40,27 +46,36 @@ const Main = () => {
             </button>
             <div className='container rounded-2xl p-2 sm:mx-2 sm:w-full md:w-10/12 grid xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6 sm:gap-4'>
                 {
+
                     notes.map((elem) => {
                         return (
-                            <div className="card shadow-xl border-2 border-purple-500 " key={elem._id}>
+                            <div className="card shadow-xl border-2 border-purple-500 rounded-md" key={elem._id}>
                                 <div className="card-body p-3">
                                     <h2 className="card-title text-purple-500">
                                         {elem.title}
-                                        <button className='btn btn-sm ms-auto  p-0  btn-ghost text-purple-500'>
-                                            <i className='bx bx-pin p-1 text-md'></i>
+                                        <button className='btn btn-sm ms-auto  p-0  btn-ghost text-purple-500'
+                                            onClick={() => starMark(elem._id)}
+                                        >
+                                            {
+                                                (!elem.star) ?
+                                                    <i className='bx bx-star p-1 text-md'></i>
+                                                    :
+                                                    <i className='bx bxs-star p-1 text-md text-orange-400'></i>
+                                            }
                                         </button>
                                     </h2>
                                     <div className='-mt-1'>
                                         <div className='text-sm -mb-1 text-gray-500'>
                                             {elem.date}
-                                            <button className='btn btn-sm float-end  p-0  btn-ghost text-purple-500'>
+                                            <button className='btn btn-sm float-end p-0 btn-ghost text-purple-500'
+                                                onClick={() => editNote(elem)}>
                                                 <i className='bx bxs-pencil text-md p-1' ></i>
                                             </button>
+
                                         </div>
                                         {elem.content}
-
                                     </div>
-                                    <button className='btn btn-sm ms-auto float-end p-0 btn-ghost text-red-500'>
+                                    <button className='btn btn-sm ms-auto float-end p-0 btn-ghost text-red-500' onClick={() => deleteNote(elem._id)}>
                                         <i className='bx bxs-trash p-1 text-md'></i>
                                     </button>
                                 </div>
@@ -68,9 +83,9 @@ const Main = () => {
                         )
                     })
                 }
-
             </div>
             <Form />
+            <EditForm data={editData} />
         </section >
     )
 }

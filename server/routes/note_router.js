@@ -1,51 +1,27 @@
-import express from "express";
-import { addNote, getNotes } from "../controller/auth_controller.js";
-import User from "../models/user_model.js";
-// import User from "../models/user_model.js";
+import express from "express"
+import { addNote, deleteNote, getNote, getNotes, markStar, updateNote } from "../controller/note.controller.js";
+import Users from "../models/auth.schema.js";
 
-const router = express.Router();
-router.use(express.json())
 
-router.get("/", getNotes);
-router.post("/add", addNote);
+const noteRoute = express.Router();
 
-router.get('/:id', async (req, res) => {
 
+// noteRoute.get("/", getNotes);
+
+noteRoute.get("/", async (req, res) => {
     try {
-        const user = await User.findOne();
-        if (!user) return res.status(404).json("User not logged in")
-
-        const _id = req.params.id;
-
-        const note = user.find(_id)
-        res.status(200).json(note)
-
+        // const { token } = req.header;
+        res.send(req.headers.cookie)
     } catch (error) {
-        res.status(404).json({ message: (error.message) });
+        res.status(400).json(error.message)
     }
-});
+})
+noteRoute.get("/:id", getNote);
 
-router.put('/:id', (req, res) => {
-    const id = req.params.id;
-    const { title, content } = req.body;
-    Note.findByIdAndUpdate(id, { title, content }, (err) => {
-        if (err) {
-            res.status(400).send({ message: 'Error updating note' });
-        } else {
-            res.send({ message: 'Note updated successfully' });
-        }
-    });
-});
+noteRoute.put("/star/:id", markStar)
+noteRoute.post("/add", addNote)
+noteRoute.post("/update/:id", updateNote);
 
-router.delete('/:id', (req, res) => {
-    const id = req.params.id;
-    Note.findByIdAndRemove(id, (err) => {
-        if (err) {
-            res.status(404).send({ message: 'Note not found' });
-        } else {
-            res.send({ message: 'Note deleted successfully' });
-        }
-    });
-});
+noteRoute.delete("/:id", deleteNote);
 
-export default router
+export default noteRoute

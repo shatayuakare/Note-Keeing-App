@@ -1,33 +1,22 @@
-import React, { useState } from 'react'
 import axios from 'axios';
+import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
-import { useAuth } from '../context/AuthProvider';
 
-const Form = () => {
-
-    const [authUser, setAuthUser] = useAuth();
-    setAuthUser(authUser)
-
+const EditForm = ({ data }) => {
     const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
+    const [content, setContent] = useState("")
 
-    const [error, setError] = useState(null);
-
-    let email = null;
-    let formData = {
-        title, content
-    }
-
-    if (authUser) {
-        email = authUser.email;
-        formData = {
-            title, content, email
+    const [error, setError] = useState(null)
+    useEffect(() => {
+        console.log(data)
+        if (data !== null) {
+            setTitle(data.title)
+            setContent(data.content)
         }
-    }
-
-    const addNoteHandler = async (event) => {
+    }, [data])
+    const saveChange = async (event) => {
         event.preventDefault();
-
+        if (data !== null) return;
         if (!title) {
             setError("Please enter title");
             return;
@@ -36,28 +25,25 @@ const Form = () => {
             setError("Please enter message");
             return;
         }
-
-        await axios.post("http://localhost:4001/notes/add", formData).then(() => {
-            toast.success("Note add Successfully")
+        const updateData = {
+            title, content
+        }
+        await axios.post(`http://localhost:4001/notes/update/${data._id}`, updateData).then(() => {
+            toast.success("Changes Successfully")
             window.location.reload()
-        }).catch((err) => {
-            setError(err.response.message)
-            if (err.response) return toast.error(err.response.message)
-        })
-        setError(null);
+        }).catch((err) => toast.error(err.response.data))
     }
-
     return (
-        <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
-            <div className="modal-box bg-purple-500 shadow-md rounded-sm">
+        <dialog id="edit-form" className="modal">
+            <div className="modal-box bg-purple-500">
                 <form method="dialog">
                     <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                 </form>
-
                 <h4 className='sm:text-2xl md:text-3xl my-3 font-bold text-white text-center'>
-                    Add Notes with Agenda
+                    Edit Note
                 </h4>
-                <form action="" className='gap-6 grid' onSubmit={addNoteHandler}>
+                <form action="" className='gap-6 grid' onSubmit={saveChange}>
+
                     <input type="text" placeholder="Note Title..."
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
@@ -71,9 +57,8 @@ const Form = () => {
                     {
                         error && <p className='text-red-300'>{error}</p>
                     }
-                    <hr />
-                    <button type='submit' className='btn btn-ghost bg-purple-700 w-2/5 hover:bg-purple-800 text-white font-bold btn-md  mx-auto block'>
-                        Add Note
+                    <button type='submit' className='btn btn-ghost bg-purple-700 w-2/5 hover:bg-purple-800 text-white font-bold btn-md mx-auto block'>
+                        Save Changes
                     </button>
                 </form>
             </div>
@@ -81,4 +66,4 @@ const Form = () => {
     )
 }
 
-export default Form
+export default EditForm

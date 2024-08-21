@@ -12,7 +12,7 @@ const Header = () => {
                 ...authUser,
                 User: null
             })
-            localStorage.removeItem("user")
+            localStorage.removeItem("token")
             toast.success("User Logout");
             window.location.reload();
         } catch (error) {

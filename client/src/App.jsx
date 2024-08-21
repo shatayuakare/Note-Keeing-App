@@ -12,14 +12,15 @@ const App = () => {
 
   const [authUser, setAuthUser] = useAuth()
   setAuthUser(authUser)
-
+  console.log(authUser)
   return (
     <BrowserRouter>
+
       <Header />
       <Routes>
         <Route path={"/"} element={<Main />} />
-        <Route path={"/login"} element={!authUser ? <Login /> : <Navigate path={"/"} />} />
-        <Route path={"/signup"} element={!authUser ? <Signup /> : <Navigate path={"/"} />} />
+        <Route path={"/login"} element={!authUser ? <Login /> : <Navigate to={"/"} />} />
+        <Route path={"/signup"} element={!authUser ? <Signup /> : <Navigate to={"/"} />} />
       </Routes>
       <Footer />
       <Toaster />

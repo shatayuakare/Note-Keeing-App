@@ -1,20 +1,17 @@
 import express from "express";
-import { login, signup } from "../controller/auth_controller.js"
-import User from "../models/user_model.js";
+// import jwt from "jsonwebtoken";/
+// import bcrypt from "bcryptjs"
+// import User from "../models/user.schema.js";
+import { login, signup } from "../controller/auth.controller.js";
 
-const router = express.Router();
+const authRoute = express.Router();
 
-router.get("/", async (req, res) => {
-    try {
-        const user = await User.findOne();
-        res.status(200).json(user);
-    } catch (error) {
-        res.status(404).json({ message: "User not found" });
-    }
+// authRoute.get("/verify", verifyToken);
+authRoute.get("/", (req, res) => {
+    res.status(200).send("Working Properly on port 4001")
 })
 
-router.post("/login", login)
+authRoute.post("/signup", signup)
+authRoute.post("/login", login)
 
-router.post("/signup", signup)
-
-export default router
+export default authRoute
